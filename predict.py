@@ -1,11 +1,13 @@
 from cog import BasePredictor, Path, Input
 import subprocess
+from time import time, sleep
+t0 = time()
 import torch
-
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from diffusers import CogVideoXPipeline, CogVideoXDDIMScheduler, CogVideoXDPMScheduler
 from diffusers.utils import export_to_video
-# from pget import pget_manifest
+from pget import pget_manifest
+print("[⏰] Imports:", round(time() - t0, 2), "seconds")
 
 sys_prompt = """You are part of a team of bots that creates videos. You work with an assistant bot that will draw anything you say in square brackets.
 
@@ -23,11 +25,14 @@ Video descriptions must have the same num of words as examples below. Extra word
 class Predictor(BasePredictor):
 
     def setup(self):
-        # pget_manifest()
+        t0 = time()
+        pget_manifest()
+        print("Download weights:", round(time() - t0, 2), "seconds"); t0 = time()
         self.device = "cuda"
         self.tokenizer = AutoTokenizer.from_pretrained("./weights/glm-4", trust_remote_code=True)
+        print("Load tokenizer:", round(time() - t0, 2), "seconds"); t0 = time()
         self.model = (
-            AutoModel.from_pretrained("./weights/glm-4",
+            AutoModelForCausalLM.from_pretrained("./weights/glm-4",
                 torch_dtype=torch.bfloat16,
                 low_cpu_mem_usage=True,
                 trust_remote_code=True,
@@ -35,11 +40,14 @@ class Predictor(BasePredictor):
             .to(self.device)
             .eval()
         )
+        print("Load LLM:", round(time() - t0, 2), "seconds"); t0 = time()
         self.pipe = CogVideoXPipeline.from_pretrained("./weights/cog-video-x", torch_dtype=torch.bfloat16)
+        print("Load pipeline:", round(time() - t0, 2), "seconds"); t0 = time()
         # for 2b, we should switch this to CogVideoXDDIMScheduler
-        self.pipe.scheduler = CogVideoXDPMScheduler.from_config(pipe.scheduler.config, timestep_spacing="trailing")
+        self.pipe.scheduler = CogVideoXDPMScheduler.from_config(self.pipe.scheduler.config, timestep_spacing="trailing")
         self.pipe.enable_model_cpu_offload()
         self.pipe.vae.enable_tiling()
+        print("Configure pipeline:", round(time() - t0, 2), "seconds")
 
     def predict(self,
         prompt: str = Input(description="Prompt"),

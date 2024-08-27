@@ -1,1 +1,3 @@
 weights/
+.cog/
+__pycache__/

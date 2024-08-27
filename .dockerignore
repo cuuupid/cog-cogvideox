@@ -1,0 +1,12 @@
+weights/glm-4/model-00001-of-00004.safetensors
+weights/glm-4/model-00002-of-00004.safetensors
+weights/glm-4/model-00003-of-00004.safetensors
+weights/glm-4/model-00004-of-00004.safetensors
+weights/cog-video-x/text_encoder/model-00001-of-00004.safetensors
+weights/cog-video-x/text_encoder/model-00002-of-00004.safetensors
+weights/cog-video-x/text_encoder/model-00003-of-00004.safetensors
+weights/cog-video-x/text_encoder/model-00004-of-00004.safetensors
+weights/cog-video-x/transformer/diffusion_pytorch_model-00001-of-00003.safetensors
+weights/cog-video-x/transformer/diffusion_pytorch_model-00002-of-00003.safetensors
+weights/cog-video-x/transformer/diffusion_pytorch_model-00003-of-00003.safetensors
+weights/cog-video-x/vae/diffusion_pytorch_model.safetensors
